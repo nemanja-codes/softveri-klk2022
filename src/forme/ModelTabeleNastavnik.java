@@ -4,6 +4,7 @@
  */
 package forme;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -40,15 +41,18 @@ public class ModelTabeleNastavnik extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Nastavnik n = lista.get(rowIndex);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         switch (columnIndex) {
                 case 0:
                     return n.getIme();
                 case 1:
                     return n.getPrezime();
                 case 2:
-                    return n.getDatumOd();
+                    return sdf.format(n.getDatumOd());
                 case 3:
-                    return n.getDatumDo();
+                    if(n.getDatumDo() == null)
+                        return "";
+                    return sdf.format(n.getDatumDo());
                 case 4:
                     if(n.getZvanje() == null) return null;
                     return n.getZvanje().getNaziv();

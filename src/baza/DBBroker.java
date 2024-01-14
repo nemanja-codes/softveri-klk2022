@@ -119,5 +119,25 @@ public class DBBroker {
         }
         return lista;
     }
+
+    public boolean azurirajNastavnika(int id, java.util.Date datumOd, java.util.Date datumDo) throws SQLException {
+        try {
+            String upit = "UPDATE nastavnik SET datumOd = ?, datumDo = ? WHERE id = ?";
+            PreparedStatement ps = Konekcija.getInstance().getConnection().prepareStatement(upit);
+            java.sql.Date datumOdSQL = new java.sql.Date(datumOd.getTime());
+            java.sql.Date datumDoSQL = new java.sql.Date(datumDo.getTime());
+            ps.setDate(1, datumOdSQL);
+            ps.setDate(2, datumDoSQL);
+            ps.setInt(3, id);
+            
+            ps.executeUpdate();
+            Konekcija.getInstance().getConnection().commit();
+            return true;
+        } catch (SQLException ex) {
+            Konekcija.getInstance().getConnection().rollback();
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         return false;
+    }
     
 }

@@ -197,4 +197,10 @@ public class PrikazNastavnikaForma extends javax.swing.JFrame {
             cmbZvanje.addItem(zvanje);
         }
     }
+
+    void osveziTabelu() {
+        List<Nastavnik> lista = Controller.getInstance().vratiListuNastavnika();
+        ModelTabeleNastavnik mtn = new ModelTabeleNastavnik(lista);
+        tblNastavnici.setModel(mtn);
+    }
 }

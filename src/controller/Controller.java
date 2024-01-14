@@ -5,6 +5,8 @@
 package controller;
 
 import baza.DBBroker;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import model.Nastavnik;
 import model.Zvanje;
@@ -47,6 +49,12 @@ public class Controller {
     public void setSelektovaniNastavnik(Nastavnik selektovaniNastavnik) {
         this.selektovaniNastavnik = selektovaniNastavnik;
     }
+
+    public boolean azurirajNastavnika(int id, Date datumOd, Date datumDo) throws SQLException {
+        return dbb.azurirajNastavnika(id, datumOd, datumDo);
+    }
+
+    
     
     
     

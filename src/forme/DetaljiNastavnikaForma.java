@@ -5,7 +5,13 @@
 package forme;
 
 import controller.Controller;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import model.Nastavnik;
 import model.Zvanje;
 
@@ -15,6 +21,7 @@ import model.Zvanje;
  */
 public class DetaljiNastavnikaForma extends javax.swing.JDialog {
     private Nastavnik selektovaniNastavnik  = Controller.getInstance().getSelektovaniNastavnik();
+    PrikazNastavnikaForma roditelj;
     /**
      * Creates new form DetaljiNastavnikaForma
      */
@@ -22,12 +29,14 @@ public class DetaljiNastavnikaForma extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+        this.roditelj = (PrikazNastavnikaForma) parent;
         popuniComboBox();
         txtIme.setText(selektovaniNastavnik.getIme());
         txtPrezime.setText(selektovaniNastavnik.getPrezime());
-        txtDatumOd.setText(selektovaniNastavnik.getDatumOd().toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        txtDatumOd.setText(sdf.format(selektovaniNastavnik.getDatumOd()));
         if(selektovaniNastavnik.getDatumDo() != null)
-            txtDatumDo.setText(selektovaniNastavnik.getDatumDo().toString());
+            txtDatumDo.setText(sdf.format(selektovaniNastavnik.getDatumDo()));
         cmbZvanje.setSelectedItem(selektovaniNastavnik.getZvanje().getNaziv());
         
         txtIme.setEnabled(false);
@@ -54,6 +63,7 @@ public class DetaljiNastavnikaForma extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         txtDatumOd = new javax.swing.JTextField();
         txtDatumDo = new javax.swing.JTextField();
+        btnAzuriraj = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -67,38 +77,47 @@ public class DetaljiNastavnikaForma extends javax.swing.JDialog {
 
         jLabel5.setText("datum do:");
 
+        btnAzuriraj.setText("Azuriraj");
+        btnAzuriraj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAzurirajActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(txtPrezime, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(txtIme, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnAzuriraj)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
+                                .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtDatumDo))
+                                .addComponent(txtPrezime, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3))
+                                .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmbZvanje, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtDatumOd))))))
-                .addContainerGap(106, Short.MAX_VALUE))
+                                .addComponent(txtIme, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(5, 5, 5)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel5)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(txtDatumDo))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel4)
+                                        .addComponent(jLabel3))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(cmbZvanje, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txtDatumOd)))))))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -123,11 +142,45 @@ public class DetaljiNastavnikaForma extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(txtDatumDo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnAzuriraj)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAzurirajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAzurirajActionPerformed
+        //String ime = txtIme.getText();
+        //String prezime = txtPrezime.getText();
+        String datumOdStr = txtDatumOd.getText();
+        String datumDoStr = txtDatumDo.getText();
+        //Zvanje zvanje = (Zvanje) cmbZvanje.getSelectedItem();
+        int id = selektovaniNastavnik.getId();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        
+        try {
+            Date datumOd = sdf.parse(datumOdStr);
+            Date datumDo = sdf.parse(datumDoStr);
+            
+            int potvrda = JOptionPane.showConfirmDialog(this, "Da li ste sigurni da zelite da azurirate nastavnika?", "Potvrda", JOptionPane.YES_NO_OPTION);
+            if(potvrda == JOptionPane.YES_OPTION) {
+                boolean uspesno = Controller.getInstance().azurirajNastavnika(id, datumOd, datumDo);
+                if(uspesno) {
+                    roditelj.osveziTabelu();
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "GRESKA");
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(DetaljiNastavnikaForma.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+        
+        
+    }//GEN-LAST:event_btnAzurirajActionPerformed
 
     /**
      * @param args the command line arguments
@@ -135,6 +188,7 @@ public class DetaljiNastavnikaForma extends javax.swing.JDialog {
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAzuriraj;
     private javax.swing.JComboBox<Zvanje> cmbZvanje;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
