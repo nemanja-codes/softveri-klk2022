@@ -5,8 +5,14 @@
 package forme;
 
 import controller.Controller;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.table.TableColumn;
 import model.Nastavnik;
 import model.Zvanje;
 
@@ -26,6 +32,15 @@ public class PrikazNastavnikaForma extends javax.swing.JFrame {
         List<Nastavnik> lista = Controller.getInstance().vratiListuNastavnika();
         ModelTabeleNastavnik mtn = new ModelTabeleNastavnik(lista);
         tblNastavnici.setModel(mtn);
+       
+        
+        List<Zvanje> listaZvanja = Controller.getInstance().vratiZvanja();
+        JComboBox<Zvanje> cmbZvanje = new JComboBox<>();
+        for (Zvanje zvanje : listaZvanja) {
+            cmbZvanje.addItem(zvanje);
+        }
+        TableColumn kolonaZvanje = tblNastavnici.getColumnModel().getColumn(4);
+        kolonaZvanje.setCellEditor(new DefaultCellEditor(cmbZvanje));
     }
 
     /**
@@ -43,6 +58,7 @@ public class PrikazNastavnikaForma extends javax.swing.JFrame {
         cmbZvanje = new javax.swing.JComboBox<>();
         btnPrikazi = new javax.swing.JButton();
         btnDetalji = new javax.swing.JButton();
+        btnAzuriraj = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -81,15 +97,19 @@ public class PrikazNastavnikaForma extends javax.swing.JFrame {
             }
         });
 
+        btnAzuriraj.setText("Azuriraj");
+        btnAzuriraj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAzurirajActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 610, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addComponent(jLabel1)
@@ -98,7 +118,12 @@ public class PrikazNastavnikaForma extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnPrikazi)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnDetalji, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnDetalji, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 610, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAzuriraj, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -110,9 +135,11 @@ public class PrikazNastavnikaForma extends javax.swing.JFrame {
                     .addComponent(cmbZvanje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrikazi)
                     .addComponent(btnDetalji))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnAzuriraj)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
@@ -146,6 +173,29 @@ public class PrikazNastavnikaForma extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnDetaljiActionPerformed
+
+    private void btnAzurirajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAzurirajActionPerformed
+        int selektovaniRed = tblNastavnici.getSelectedRow();
+        
+        if(selektovaniRed == -1) {
+            JOptionPane.showMessageDialog(this, "Nije selektovan nijedan red!");
+        } else {
+            try {
+                ModelTabeleNastavnik mtn = (ModelTabeleNastavnik) tblNastavnici.getModel();
+                List<Nastavnik> lista = mtn.getLista();
+                Nastavnik selektovaniNastavnik = lista.get(selektovaniRed);
+                boolean uspesno = Controller.getInstance().azuriraj(selektovaniNastavnik.getId(), selektovaniNastavnik.getDatumOd(), selektovaniNastavnik.getDatumDo(), selektovaniNastavnik.getZvanje());
+                if(uspesno) {
+                    osveziTabelu();
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "GRESKA");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PrikazNastavnikaForma.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnAzurirajActionPerformed
 
     /**
      * @param args the command line arguments
@@ -183,6 +233,7 @@ public class PrikazNastavnikaForma extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAzuriraj;
     private javax.swing.JButton btnDetalji;
     private javax.swing.JButton btnPrikazi;
     private javax.swing.JComboBox<Zvanje> cmbZvanje;

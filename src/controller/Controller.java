@@ -54,6 +54,12 @@ public class Controller {
         return dbb.azurirajNastavnika(id, datumOd, datumDo);
     }
 
+    public boolean azuriraj(int id, Date datumOd, Date datumDo, Zvanje zvanje) throws SQLException {
+        return dbb.azuriraj(id, datumOd, datumDo, zvanje);
+    }
+
+    
+
     
     
     
