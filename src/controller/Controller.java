@@ -4,13 +4,19 @@
  */
 package controller;
 
+import baza.DBBroker;
+import java.util.List;
+import model.Nastavnik;
+import model.Zvanje;
+
 /**
  *
  * @author necam
  */
 public class Controller {
     private static Controller instance;
-
+    private DBBroker dbb;
+    private Nastavnik selektovaniNastavnik;
     public static Controller getInstance() {
         if(instance == null) {
             instance = new Controller();
@@ -19,7 +25,29 @@ public class Controller {
     }
     
     private Controller() {
+        dbb = new DBBroker();
     }
+
+    public List<Nastavnik> vratiListuNastavnika() {
+        return dbb.vratiListuNastavnika();
+    }
+
+    public List<Zvanje> vratiZvanja() {
+        return dbb.vratiZvanja();
+    }
+
+    public List<Nastavnik> vratiListuNastavnikaPoZvanju(Zvanje selektovanoZvanje) {
+        return dbb.vratiListuNastavnikaPoZvanju(selektovanoZvanje);
+    }
+
+    public Nastavnik getSelektovaniNastavnik() {
+        return selektovaniNastavnik;
+    }
+
+    public void setSelektovaniNastavnik(Nastavnik selektovaniNastavnik) {
+        this.selektovaniNastavnik = selektovaniNastavnik;
+    }
+    
     
     
 }
